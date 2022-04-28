@@ -1,6 +1,8 @@
 package com.kabouzeid
 
+import android.content.Context
 import android.view.View
+import androidx.test.InstrumentationRegistry
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
