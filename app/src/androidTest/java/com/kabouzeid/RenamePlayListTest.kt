@@ -1,12 +1,14 @@
 package com.kabouzeid
 
-import android.content.Intent
+import android.os.Build
+import androidx.test.InstrumentationRegistry.getInstrumentation
+import androidx.test.InstrumentationRegistry.getTargetContext
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.kabouzeid.gramophone.R
@@ -14,25 +16,26 @@ import com.kabouzeid.gramophone.ui.activities.MainActivity
 import org.hamcrest.Matchers.*
 import org.junit.BeforeClass
 import org.junit.ClassRule
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class RenamePlayListTest {
 
     @Test
     fun renamePlaylist() {
-        activityTestRule.launchActivity(Intent())
-
+        activityTestRule.launchActivity(null)
         val playlistText = activityTestRule.activity.getString(R.string.playlists)
-        //Without uppercase()
-        onView(withText(playlistText.uppercase()))
-            .perform(scrollTo(), click())
+        //TODO Without uppercase()
+//        onView(TestUtils.withIndex(withId(R.id.menu), 3)).perform(scrollTo(), click())
+        onView(withText(playlistText.uppercase())).perform(scrollTo(), click())
+        //TODO waiting animation's stop
+        Thread.sleep(100)
+        onView(allOf(withId(R.id.title), withText(NAME_PLAYLIST))).perform(click())
 
-        onView(
-            TestUtils.withIndex(withId(R.id.menu), 3)
-        ).perform(click())
+        Espresso.openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
+
         val renamePlaylistText = activityTestRule.activity.getString(R.string.rename_action)
         onView(anyOf(withText(renamePlaylistText), withId(R.id.action_rename_playlist)))
             .perform(click())
@@ -43,6 +46,9 @@ class RenamePlayListTest {
         val agreeWithRenameText = activityTestRule.activity.getString(R.string.rename_action)
         onView(withText(agreeWithRenameText)).perform(click())
 
+        onView(isRoot()).perform(ViewActions.pressBack())
+        onView(allOf(withId(R.id.title), withText(RENAME_PLAYLIST))).check(matches(isDisplayed()))
+
         activityTestRule.finishActivity()
     }
 
@@ -52,15 +58,25 @@ class RenamePlayListTest {
 
         @ClassRule
         @JvmField
-        val activityTestRule = ActivityTestRule(MainActivity::class.java, true, true)
+        val activityTestRule = ActivityTestRule(MainActivity::class.java, false, false)
 
-/*        @BeforeClass
+        @BeforeClass
         @JvmStatic
         fun beforeTest() {
+            //TODO try-catch
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getInstrumentation().uiAutomation.executeShellCommand(
+                    "pm grant " + getTargetContext().packageName
+                            + " android.permission.READ_EXTERNAL_STORAGE"
+                )
+            }
+            activityTestRule.launchActivity(null)
+            onView(withId(R.id.mi_button_cta)).perform(click())
+
             val playlistText = activityTestRule.activity.getString(R.string.playlists)
             onView(withText(playlistText.uppercase())).perform(scrollTo(), click())
 
-            Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+            Espresso.openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
 
             val newPlayListText = activityTestRule.activity.getString(R.string.new_playlist_title)
             onView(withText(newPlayListText)).perform(click())
@@ -74,6 +90,6 @@ class RenamePlayListTest {
             onView(withText(songsText.uppercase())).perform(scrollTo(), click())
 
             activityTestRule.finishActivity()
-        }*/
+        }
     }
 }
