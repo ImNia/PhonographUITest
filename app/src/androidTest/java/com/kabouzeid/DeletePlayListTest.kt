@@ -16,14 +16,12 @@ import com.kabouzeid.gramophone.R
 import com.kabouzeid.gramophone.ui.activities.MainActivity
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.anyOf
-import org.junit.BeforeClass
-import org.junit.ClassRule
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DeletePlayListTest {
+    @Ignore("Not ready yet")
     @Test
     fun deletePlaylist() {
         activityTestRule.launchActivity(Intent())

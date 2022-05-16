@@ -23,11 +23,11 @@ import org.junit.runners.MethodSorters
 
 
 @RunWith(AndroidJUnit4::class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AddSingToPlaylistTest {
 
+    @Ignore("Not ready yed")
     @Test
-    fun A_addSingTest() {
+    fun addSingTest() {
         activityTestRule.launchActivity(Intent())
 
         onView(TestUtils.withIndex(withId(R.id.menu), 1))
