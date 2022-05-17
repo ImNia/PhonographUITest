@@ -31,7 +31,6 @@ class RenamePlayListTest {
         val playlistText = activityTestRule.activity.getString(R.string.playlists)
         onView(withText(equalToIgnoringCase(playlistText))).perform(scrollTo(), click())
 
-        //TODO waiting animation's stop
         Thread.sleep(100)
         onView(allOf(withId(R.id.title), withText(NAME_PLAYLIST))).perform(click())
 
